@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+
+
+	<t t-name="PaymentScreen-Paymentlines" t-extend="PaymentScreen-Paymentlines">
+		<t t-jquery="tbody" t-operation="replace">
+	        <tbody>
+                <t t-foreach='paymentlines' t-as='line'>
+                    <t t-if='line.selected'>
+                        <tr class='paymentline selected'>
+                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                            <td class='col-tendered edit'>
+                                <t t-esc='widget.inputbuffer' />
+                                <!-- <t t-esc='line.get_amount()' /> -->
+                            </td>
+                            <t t-if='order.get_change(line)'>
+                                <td class='col-change highlight' >
+                                    <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                    
+                                </td>
+                            </t>
+                            <t t-if='!order.get_change(line)'>
+                                <td class='col-change' ></td>
+                            </t>
+
+                            <td class='col-name' > <t t-esc='line.name' /> <br/>
+                                    <t t-esc="widget.card_holder" /></td>
+                            <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete"> <i class='fa fa-times-circle' /> </td>
+                        </tr>
+                    </t>
+                    <t t-if='!line.selected'>
+                        <tr class='paymentline' t-att-data-cid='line.cid'>
+                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                            <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                            <td class='col-change'>
+                                <t t-if='order.get_change(line)'>
+                                    <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                 </t>
+                            </td>
+                            <td class='col-name'> <t t-esc='line.name' /> </td>
+                            <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete"> <i class='fa fa-times-circle' /> </td>
+                        </tr>
+                    </t>
+                </t>
+                <t t-if='extradue'>
+                    <tr class='paymentline extra' t-att-data-cid='0'>
+                        <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(extradue)' /> </td>
+                    </tr>
+                </t>
+            </tbody>
+	    </t>
+	</t>
+
+
+	<t t-name="InputCardHolderPopup">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-input-card-holder-popup">
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <input class="input-card-holder" type='text' t-att-value="widget.options.value || ''"></input>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+	<t t-name="WaitingPinpad">
+		<div role="dialog" class="modal-dialog">
+			<div class="popup popup-waiting-pinpad">
+				<header class="title"><t t-esc=" widget.options.title || '' " /></header>
+
+				<div class="body">
+					<t t-esc=" widget.options.body || '' " />
+				</div>
+				<div class="footer">
+					<div class="button cancel">
+						Cancel
+					</div>
+				</div>
+			</div>
+		</div>
+	</t>
+</templates>

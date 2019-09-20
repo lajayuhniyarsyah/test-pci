@@ -1,0 +1,9 @@
+<odoo>
+	<template id="custom_pos_assets" name="Custom POS Assets" inherit_id="point_of_sale.assets">
+		<xpath expr=".">
+			<script type="text/javascript" src="/custom_pos/static/src/js/models.js"></script>
+			<script type="text/javascript" src="/custom_pos/static/src/js/popup.js"></script>
+			<script type="text/javascript" src="/custom_pos/static/src/js/screen.js"></script>
+		</xpath>
+	</template>
+</odoo>

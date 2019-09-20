@@ -1,0 +1,5 @@
+<odoo>
+	<function model="pos.config" name="use_iface_vkeyboard" id="use_iface_vkeyboard" />
+	<function model="pos.config" name="use_iface_precompute_cash" id="use_iface_precompute_cash" />
+	<function model="pos.config" name="add_credit_card_payment_method" id="add_credit_card_payment_method" />
+</odoo>

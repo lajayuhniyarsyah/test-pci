@@ -1,0 +1,10 @@
+<odoo>
+	<!-- create account.journal record -->
+	<record id="journal_credit_card" model="account.journal">
+		<field name="code">CC</field>
+		<field name="type">bank</field>
+		<field name="name">Credit Card</field>
+		<field name="journal_user" eval="True" />
+	</record>
+	<!-- END -->
+</odoo>
