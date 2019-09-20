@@ -14,9 +14,9 @@
     ],
     'data': [
     	'views/assets.xml',
-
+        
+        'data/account_journal.xml',
         'data/pos_config.xml',
-    	'data/account_journal.xml',
     ],
     'qweb':[
     	'static/src/xml/custom_pos.xml',
