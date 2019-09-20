@@ -10,8 +10,19 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 	},
 	click_paymentmethods: function(id){
 		var self = this
+		console.log(this)
+		console.log("EEEEE")
 
-		if (id==10){
+		var cashregister = null;
+        for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
+            if ( this.pos.cashregisters[i].journal_id[0] === id ){
+                cashregister = this.pos.cashregisters[i];
+                break;
+            }
+        }
+
+        console.log(["BANK",cashregister])
+		if (cashregister.journal.type=='bank'){
 			// point #2
 			// show popup waiting pinpad feedback
 			this.gui.show_popup('waiting-pinpad',{
@@ -29,12 +40,12 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 	},
 	card_holder_input: function(value) {
 		var order = this.pos.get_order();
-	    order.selected_paymentline.set_screen_data('card_holder',value)
-	    this.order_changes();
-	    // this.render_paymentlines();
-	    // this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
-        
-    },
+		order.selected_paymentline.set_screen_data('card_holder',value)
+		this.order_changes();
+		// this.render_paymentlines();
+		// this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
+		
+	},
 
 })
 
