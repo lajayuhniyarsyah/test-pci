@@ -11,24 +11,42 @@ var paymentline_super = models.Paymentline.prototype;
 
 
 models.Paymentline = models.Paymentline.extend({
-	// init_from_JSON: function(json) {
-	// 	console.log("Called from extended paymentline ")
-	// 	paymentline_super.init_from_JSON.apply(this, arguments);	
-	// 	this.card_holder = json.card_holder
-	// }
 	initialize: function(attributes, options) {
 		paymentline_super.initialize.apply(this, arguments);
+		this.pay_credit = false
+		this.pay_points = false
+		this.card_holder = ""
 		if (options.card_holder){
-			this.card_holder = options.card_holder
+			this.set_card_holder(options.card_holder)
 		}
 	},
 	export_as_JSON: function(){
 		var res = paymentline_super.export_as_JSON.apply(this, arguments)
 		res.card_holder = this.card_holder
-		console.log('retuen export json')
-		console.log(res)
+		res.pay_credit = this.pay_credit
+		res.pay_points = this.pay_points
         return res
     },
+    set_pay_points: function(){
+    	this.pay_credit = false;
+    	this.pay_points = true;
+    	this.trigger('change',this);
+    },
+    get_pay_points: function(){
+    	return this.pay_points
+    },
+    set_pay_credit: function(){
+    	this.pay_points = false;
+    	this.pay_credit = true;
+    	this.trigger('change',this);
+    },
+    get_pay_credit: function(){
+    	return this.pay_credit
+    },
+    set_card_holder: function(value) {
+    	this.card_holder = value.trim()
+    	this.trigger('change',this);
+    }
 })
 
 
@@ -42,8 +60,6 @@ models.Order = models.Order.extend({
 	},
 	add_paymentline: function(cashregister, card_holder="") {
         this.assert_editable();
-        console.log("AAAAAAAAAAAAAAAAAAAAhahahahahaha")
-        console.log("inserting card holder" + card_holder)
         var newPaymentline = new models.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos, card_holder:card_holder});
         
         console.log(newPaymentline)

@@ -24,8 +24,20 @@
                                 <td class='col-change' ></td>
                             </t>
 
-                            <td class='col-name' > <t t-esc='line.name' /> <br/>
-                                    <t t-esc="widget.card_holder" /></td>
+                            <td class='col-name' > <t t-esc='line.name' />
+                                <t t-if="line.card_holder">
+                                    <br/>
+                                    <t t-esc="line.card_holder" />
+                                </t>
+                                <t t-if="line.pay_points">
+                                    <br/>
+                                    Pay With Points
+                                </t>
+                                <t t-if="line.pay_credit">
+                                    <br/>
+                                    Pay With Credit
+                                </t>
+                            </td>
                             <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete"> <i class='fa fa-times-circle' /> </td>
                         </tr>
                     </t>
@@ -70,20 +82,57 @@
         </div>
     </t>
 
-	<t t-name="WaitingPinpad">
-		<div role="dialog" class="modal-dialog">
-			<div class="popup popup-waiting-pinpad">
-				<header class="title"><t t-esc=" widget.options.title || '' " /></header>
 
-				<div class="body">
-					<t t-esc=" widget.options.body || '' " />
-				</div>
-				<div class="footer">
-					<div class="button cancel">
-						Cancel
-					</div>
-				</div>
-			</div>
-		</div>
-	</t>
+    <t t-name="CreditTypePopup">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-input-credit-type-popup">
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <div class="button btn-info pay-credit">
+                    Credit
+                </div>
+
+                <div class="button btn-info pay-points">
+                    Points
+                </div>
+                <div class="footer">
+                    <div class="button backtocardholder">
+                        Back
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+	<t t-name="WaitingPinpad">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-waiting-pinpad">
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+
+                <div class="body">
+                    <t t-esc=" widget.options.body || '' " />
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+    <t t-name="LoadingPopUp">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup loading-popup">
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+
+                <div class="body">
+                    <t t-esc=" widget.options.body || '' " />
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>

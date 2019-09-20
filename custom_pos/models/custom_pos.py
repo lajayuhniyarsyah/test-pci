@@ -29,6 +29,8 @@ class AccountBankStatementLine(models.Model):
 	_inherit = 'account.bank.statement.line'
 
 	card_holder = fields.Char(string="Card Holder Name")
+	pay_points = fields.Boolean('Payment with Point', default=False)
+	pay_credit = fields.Boolean('Payment with Credit', default=False)
 
 
 class PosOrder(models.Model):
@@ -36,12 +38,20 @@ class PosOrder(models.Model):
 
 
 	def _prepare_bank_statement_line_payment_values(self, data):
-		
 		res = super(PosOrder, self)._prepare_bank_statement_line_payment_values(data)
 		card_holder = data.get('card_holder')
 		if card_holder:
 			res.update({
-				'card_holder':card_holder
+				'card_holder':card_holder,
+				})
+
+
+		pay_points = data.get('pay_points')
+		pay_credit = data.get('pay_credit')
+		if pay_points or pay_credit:
+			res.update({
+				'pay_points': pay_points,
+				'pay_credit': pay_credit,
 				})
 
 		return res
@@ -50,6 +60,8 @@ class PosOrder(models.Model):
 	def _payment_fields(self, ui_paymentline):
 		res = super(PosOrder, self)._payment_fields(ui_paymentline)
 		res.update({
-			'card_holder':ui_paymentline['card_holder']
+			'card_holder':ui_paymentline['card_holder'],
+			'pay_points':ui_paymentline['pay_points'],
+			'pay_credit':ui_paymentline['pay_credit'],
 			})
 		return res
