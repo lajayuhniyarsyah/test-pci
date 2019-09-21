@@ -69,7 +69,13 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-input-card-holder-popup">
                 <header class="title"><t t-esc=" widget.options.title || '' " /></header>
-                <input class="input-card-holder" type='text' t-att-value="widget.options.value || ''"></input>
+                <t t-set="selected_paymentline" t-value="widget.pos.get_order().selected_paymentline" />
+                <t t-set="default_card_holder" t-value=""/>
+                <!-- <t t-log="'ssss'" /> -->
+                <!-- <t t-log="selected_paymentline" /> -->
+                <t t-if="selected_paymentline" t-set="default_card_holder" t-value="selected_paymentline.card_holder" />
+                <input class="input-card-holder" type='text' t-att-value="default_card_holder || ''"></input>
+                <!-- <t t-log="widget" /> -->
                 <div class="footer">
                     <div class="button confirm">
                         Ok
@@ -87,6 +93,9 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-input-credit-type-popup">
                 <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+
+
+                Please Select Fund Type:
                 <div class="button btn-info pay-credit">
                     Credit
                 </div>
@@ -95,11 +104,12 @@
                     Points
                 </div>
                 <div class="footer">
-                    <div class="button backtocardholder">
-                        Back
-                    </div>
+                    
                     <div class="button cancel">
                         Cancel
+                    </div>
+                    <div class="button backtocardholder">
+                        &amp;Pr;Back
                     </div>
                 </div>
             </div>
@@ -130,6 +140,8 @@
                 <header class="title"><t t-esc=" widget.options.title || '' " /></header>
 
                 <div class="body">
+                    <img src="/custom_pos/static/src/img/loading.gif"/>
+                    <br/>
                     <t t-esc=" widget.options.body || '' " />
                 </div>
             </div>

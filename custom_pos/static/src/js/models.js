@@ -61,8 +61,6 @@ models.Order = models.Order.extend({
 	add_paymentline: function(cashregister, card_holder="") {
         this.assert_editable();
         var newPaymentline = new models.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos, card_holder:card_holder});
-        
-        console.log(newPaymentline)
         if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
             newPaymentline.set_amount( this.get_due() );
         }

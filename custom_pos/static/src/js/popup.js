@@ -12,7 +12,7 @@ var InputCardHolderPopup = PopupWidget.extend({
 	_show_select_credit_type_popup: function(){
 		var self = this
 		this.gui.show_popup('select-credit-type-popup',{
-			'title':_t('Please Select'),
+			'title':_t('Fund Type'),
 		})
 	},
 	__confirm: function(){
@@ -31,12 +31,12 @@ var InputCardHolderPopup = PopupWidget.extend({
 				}
 			})
 		}else{
-			var selected_paymentline = this.pos.get_order().selected_paymentline;
+			var selected_paymentline = this.pos.get_order().selected_paymentline
 			if (selected_paymentline) {
 				selected_paymentline.set_card_holder(input_val)
 				this.gui.current_screen.order_changes()
-				this.gui.current_screen.reset_input();
-				this.gui.current_screen.render_paymentlines();
+				this.gui.current_screen.reset_input()
+				this.gui.current_screen.render_paymentlines()
 			}else{
 				var cashregister = null
 				for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
@@ -46,10 +46,10 @@ var InputCardHolderPopup = PopupWidget.extend({
 					}
 				}
 
-				this.gui.current_screen.pos.get_order().add_paymentline( cashregister , input_val);
+				this.gui.current_screen.pos.get_order().add_paymentline( cashregister , input_val)
 				this.gui.current_screen.order_changes()
-				this.gui.current_screen.reset_input();
-				this.gui.current_screen.render_paymentlines();
+				this.gui.current_screen.reset_input()
+				this.gui.current_screen.render_paymentlines()
 			}
 			// point #4b
 			self._show_select_credit_type_popup()
@@ -75,6 +75,17 @@ var InputCardHolderPopup = PopupWidget.extend({
 		$('body').keypress(this.pos.gui.current_screen.keyboard_handler)
 		
 		$('body').keydown(this.pos.gui.current_screen.keyboard_keydown_handler)
+	},
+	click_cancel: function() {
+		var selected_paymentline = this.pos.get_order().selected_paymentline
+		
+		if (selected_paymentline){
+			this.pos.get_order().remove_paymentline(selected_paymentline)
+	        this.gui.current_screen.reset_input()
+	        this.gui.current_screen.render_paymentlines()
+		}
+		
+		this._super()
 	}
 })
 
@@ -92,21 +103,21 @@ var CreditTypePopup = PopupWidget.extend({
 	}),
 
 	onclick_pay_credit: function(ev) {
-		var selected_paymentline = this.pos.get_order().selected_paymentline;
+		var selected_paymentline = this.pos.get_order().selected_paymentline
 		selected_paymentline.set_pay_credit()
 		this.gui.current_screen.order_changes()
-		this.gui.current_screen.reset_input();
-		this.gui.current_screen.render_paymentlines();
+		this.gui.current_screen.reset_input()
+		this.gui.current_screen.render_paymentlines()
 		// this.gui.close_popup()
-		this.gui.show_popup('loading-popup',{'title':_t("Please Wait!"), 'body':_t("Processing.....")})
+		this.gui.show_popup('loading-popup',{'title':_t("Please Wait!"), 'body':_t("Please Wait.....")})
 	},
 	onclick_pay_points: function(ev) {
-		var selected_paymentline = this.pos.get_order().selected_paymentline;
+		var selected_paymentline = this.pos.get_order().selected_paymentline
 		selected_paymentline.set_pay_points()
 		this.gui.current_screen.order_changes()
-		this.gui.current_screen.reset_input();
-		this.gui.current_screen.render_paymentlines();
-		this.gui.show_popup('loading-popup',{'title':_t("Please Wait!"), 'body':_t("Processing.....")})
+		this.gui.current_screen.reset_input()
+		this.gui.current_screen.render_paymentlines()
+		this.gui.show_popup('loading-popup',{'title':_t("Please Wait!"), 'body':_t("Please Wait.....")})
 	},
 	onclick_backtocardholder: function(ev) {
 		this.gui.show_popup('input-card-holder-popup',{
@@ -120,7 +131,14 @@ var CreditTypePopup = PopupWidget.extend({
 		var self = this
 		this._super(options)
 	},
-	close: function(){
+	close: function() {
+		this._super()
+	},
+	click_cancel: function() {
+
+		this.pos.get_order().remove_paymentline(this.pos.get_order().selected_paymentline)
+        this.gui.current_screen.reset_input()
+        this.gui.current_screen.render_paymentlines()
 		this._super()
 	}
 })
@@ -137,7 +155,7 @@ var LoadingPopUp = PopupWidget.extend({
 		// hide current pop up automatically handled by gui object
 		setTimeout(function(){
 			self.gui.close_popup()
-		}, 2000);
+		}, 5000)
 	},
 })
 
@@ -170,7 +188,7 @@ var WaitingPinpad = PopupWidget.extend({
 		// hide current pop up automatically handled by gui object
 		setTimeout(function(){
 			self._show_insert_card_holder_name_popup()
-		}, 1000);
+		}, 1000)
 	},
 })
 
