@@ -17,17 +17,27 @@ var InputCardHolderPopup = PopupWidget.extend({
 	},
 	_register_new: function(){
 		var cashregister = null
+		var journal_id = this._get_selected_journal_id()
 		var input_val = this.$('div.popup-input-card-holder-popup input.input-card-holder').val()
 		for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
-			if ( this.pos.cashregisters[i].journal_id[0] === this.journal_id ){
+			if ( this.pos.cashregisters[i].journal_id[0] === journal_id ){
 				cashregister = this.pos.cashregisters[i]
 				break;
 			}
 		}
+		console.log(cashregister)
 		this.gui.current_screen.pos.get_order().add_paymentline( cashregister , input_val)
 		this.gui.current_screen.order_changes()
 		this.gui.current_screen.reset_input()
 		this.gui.current_screen.render_paymentlines()
+	},
+	_get_selected_journal_id: function(){
+		var journal_id = this.journal_id
+		if (!journal_id){
+			var selected_paymentline = this.pos.get_order().selected_paymentline
+			journal_id = selected_paymentline.cashregister.journal.id
+		}
+		return journal_id
 	},
 	__confirm: function(){
 		var self = this
@@ -47,7 +57,8 @@ var InputCardHolderPopup = PopupWidget.extend({
 		}else{
 			var selected_paymentline = this.pos.get_order().selected_paymentline
 			if (selected_paymentline) {
-				if (selected_paymentline.cashregister.journal.id==this.journal_id){
+				var journal_id = this._get_selected_journal_id()
+				if (selected_paymentline.cashregister.journal.id==journal_id){
 					selected_paymentline.set_card_holder(input_val)
 					this.gui.current_screen.order_changes()
 					this.gui.current_screen.reset_input()
@@ -129,10 +140,14 @@ var CreditTypePopup = PopupWidget.extend({
 		this.gui.show_popup('loading-popup',{'title':_t("Please Wait!"), 'body':_t("Please Wait.....")})
 	},
 	onclick_backtocardholder: function(ev) {
+		console.log('EEExxxxxxxxxxxxx')
+		console.log(this.gui.popup_instances['waiting-pinpad'])
+		var self = this
+		var journal_id = this.gui.popup_instances['waiting-pinpad'].journal_id
 		this.gui.show_popup('input-card-holder-popup',{
 			'title':_t('Insert Card Holder Name'),
 			'body':_t('Please insert card holder name'),
-			'journal_id':this.journal_id,
+			'journal_id':journal_id,
 		})
 	},
 	show: function(options) {
