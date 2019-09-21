@@ -20,8 +20,6 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 				break;
 			}
 		}
-
-		// console.log(["BANK",cashregister])
 		if (cashregister.journal.type=='bank'){
 			// point #2
 			// show popup waiting pinpad feedback
@@ -51,15 +49,14 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 		var order = this.pos.get_order()
 		var paymentLines = order.get_paymentlines()
 		console.log(paymentLines)
+
+		var res = false
 		$.each(paymentLines, function(k, line){
 			
 			if(line.cashregister.journal.type=='bank'){
 
 				// CHECKING CARD HOLDER MUST REQUIRE
-				console.log('--------')
-				console.log(line.card_holder.trim())
 				if (!line.card_holder.trim()){
-					console.log('sss')
 					self.gui.show_popup('error', {
 						'title':_t('Card Holder Name Not Valid!'),
 						'body': _t('For Non Cash Transaction, Card Holder Must be Filled'),
@@ -80,7 +77,8 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 					return e
 				})){
 					// if any true
-					this._super(force_validation)
+					console.log('valid!!')
+					res = true
 				}else{
 					self.gui.show_popup('error', {
 						'title':_t('Data Not Valid!'),
@@ -91,13 +89,19 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 							})
 						}
 					})
+					res = false
 					return
 				}
 
 				// END
 			}
 		})
-		// this._super(force_validation)
+		if (res){
+			console.log('res')
+			console.log(res)
+			return this._super(force_validation)
+		}
+		
 
 	}
 

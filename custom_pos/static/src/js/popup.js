@@ -15,6 +15,20 @@ var InputCardHolderPopup = PopupWidget.extend({
 			'title':_t('Fund Type'),
 		})
 	},
+	_register_new: function(){
+		var cashregister = null
+		var input_val = this.$('div.popup-input-card-holder-popup input.input-card-holder').val()
+		for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
+			if ( this.pos.cashregisters[i].journal_id[0] === this.journal_id ){
+				cashregister = this.pos.cashregisters[i]
+				break;
+			}
+		}
+		this.gui.current_screen.pos.get_order().add_paymentline( cashregister , input_val)
+		this.gui.current_screen.order_changes()
+		this.gui.current_screen.reset_input()
+		this.gui.current_screen.render_paymentlines()
+	},
 	__confirm: function(){
 		var self = this
 		// console.log(['before111 set_card_holder', this.gui.current_screen])
@@ -33,23 +47,18 @@ var InputCardHolderPopup = PopupWidget.extend({
 		}else{
 			var selected_paymentline = this.pos.get_order().selected_paymentline
 			if (selected_paymentline) {
-				selected_paymentline.set_card_holder(input_val)
-				this.gui.current_screen.order_changes()
-				this.gui.current_screen.reset_input()
-				this.gui.current_screen.render_paymentlines()
-			}else{
-				var cashregister = null
-				for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
-					if ( this.pos.cashregisters[i].journal_id[0] === this.journal_id ){
-						cashregister = this.pos.cashregisters[i]
-						break;
-					}
+				if (selected_paymentline.cashregister.journal.id==this.journal_id){
+					selected_paymentline.set_card_holder(input_val)
+					this.gui.current_screen.order_changes()
+					this.gui.current_screen.reset_input()
+					this.gui.current_screen.render_paymentlines()
+				}else{
+					self._register_new()
 				}
 
-				this.gui.current_screen.pos.get_order().add_paymentline( cashregister , input_val)
-				this.gui.current_screen.order_changes()
-				this.gui.current_screen.reset_input()
-				this.gui.current_screen.render_paymentlines()
+				
+			}else{
+				self._register_new()
 			}
 			// point #4b
 			self._show_select_credit_type_popup()
