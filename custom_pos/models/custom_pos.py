@@ -32,6 +32,19 @@ class AccountBankStatementLine(models.Model):
 	pay_points = fields.Boolean('Payment with Point', default=False)
 	pay_credit = fields.Boolean('Payment with Credit', default=False)
 
+	def _validating_non_cash_payment(self):
+		self.ensure_one()
+		if self.journal_id.type=='bank':
+			if not self.card_holder:
+				raise ValidationError(_("Card Holder Name Required in Bank Transaction!"))
+			if not any([self.pay_points, self.pay_credit]):
+				raise ValidationError(_("Must Define fund type (Credit or Points)!"))
+
+	@api.constrains('journal_id','card_holder','pay_points','pay_credit')
+	def constrain_non_cash(self):
+		for rec in self:
+			rec._validating_non_cash_payment()
+
 
 class PosOrder(models.Model):
 	_inherit = 'pos.order'

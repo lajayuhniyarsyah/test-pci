@@ -14,14 +14,14 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 		console.log("EEEEE")
 
 		var cashregister = null;
-        for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
-            if ( this.pos.cashregisters[i].journal_id[0] === id ){
-                cashregister = this.pos.cashregisters[i];
-                break;
-            }
-        }
+		for ( var i = 0; i < this.pos.cashregisters.length; i++ ) {
+			if ( this.pos.cashregisters[i].journal_id[0] === id ){
+				cashregister = this.pos.cashregisters[i];
+				break;
+			}
+		}
 
-        console.log(["BANK",cashregister])
+		// console.log(["BANK",cashregister])
 		if (cashregister.journal.type=='bank'){
 			// point #2
 			// show popup waiting pinpad feedback
@@ -46,6 +46,60 @@ var CustomPaymentScreenWidget = PaymentScreenWidget.include({
 		// this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
 		
 	},
+	order_is_valid: function(force_validation) {
+		var self = this
+		var order = this.pos.get_order()
+		var paymentLines = order.get_paymentlines()
+		console.log(paymentLines)
+		$.each(paymentLines, function(k, line){
+			
+			if(line.cashregister.journal.type=='bank'){
+
+				// CHECKING CARD HOLDER MUST REQUIRE
+				console.log('--------')
+				console.log(line.card_holder.trim())
+				if (!line.card_holder.trim()){
+					console.log('sss')
+					self.gui.show_popup('error', {
+						'title':_t('Card Holder Name Not Valid!'),
+						'body': _t('For Non Cash Transaction, Card Holder Must be Filled'),
+						cancel: function(){
+							self.gui.show_popup('input-card-holder-popup',{})
+						}
+					})
+					return
+				}
+
+				// CHECKING pay_points or pay_credit must filled
+				var check = [
+					line.pay_points,
+					line.pay_credit,
+				]
+
+				if (check.some(function(e){
+					return e
+				})){
+					// if any true
+					this._super(force_validation)
+				}else{
+					self.gui.show_popup('error', {
+						'title':_t('Data Not Valid!'),
+						'body': _t('For Non Cash Transaction, Please Select Fund type (with Credit/Points)'),
+						cancel: function(){
+							self.gui.show_popup('select-credit-type-popup',{
+								'title':_t('Fund Type'),
+							})
+						}
+					})
+					return
+				}
+
+				// END
+			}
+		})
+		// this._super(force_validation)
+
+	}
 
 })
 

@@ -78,7 +78,7 @@ var InputCardHolderPopup = PopupWidget.extend({
 	},
 	click_cancel: function() {
 		var selected_paymentline = this.pos.get_order().selected_paymentline
-		
+
 		if (selected_paymentline){
 			this.pos.get_order().remove_paymentline(selected_paymentline)
 	        this.gui.current_screen.reset_input()
@@ -121,7 +121,6 @@ var CreditTypePopup = PopupWidget.extend({
 	},
 	onclick_backtocardholder: function(ev) {
 		this.gui.show_popup('input-card-holder-popup',{
-			'title':_("Input Card Holder"),
 			'title':_t('Insert Card Holder Name'),
 			'body':_t('Please insert card holder name'),
 			'journal_id':this.journal_id,
@@ -155,7 +154,7 @@ var LoadingPopUp = PopupWidget.extend({
 		// hide current pop up automatically handled by gui object
 		setTimeout(function(){
 			self.gui.close_popup()
-		}, 5000)
+		}, 1500)
 	},
 })
 

@@ -68,14 +68,11 @@
 	<t t-name="InputCardHolderPopup">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-input-card-holder-popup">
-                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <header class="title"><t t-esc=" widget.options.title || 'Insert Card Holder Name' " /></header>
                 <t t-set="selected_paymentline" t-value="widget.pos.get_order().selected_paymentline" />
                 <t t-set="default_card_holder" t-value=""/>
-                <!-- <t t-log="'ssss'" /> -->
-                <!-- <t t-log="selected_paymentline" /> -->
                 <t t-if="selected_paymentline" t-set="default_card_holder" t-value="selected_paymentline.card_holder" />
                 <input class="input-card-holder" type='text' t-att-value="default_card_holder || ''"></input>
-                <!-- <t t-log="widget" /> -->
                 <div class="footer">
                     <div class="button confirm">
                         Ok
